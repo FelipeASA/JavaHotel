@@ -1,0 +1,710 @@
+﻿
+  
+#crear servidor
+CREATE SCHEMA `openmind` ;
+
+# crear tabla de clientes`
+CREATE TABLE `openmind`.`clientes` (
+  `rut` VARCHAR(10) NOT NULL,
+  `nombre` VARCHAR(45) NOT NULL,
+  `apellido_paterno` VARCHAR(45) NOT NULL,
+  `apellido_materno` VARCHAR(45) NOT NULL,
+  `sexo` CHAR(1) NOT NULL,
+  `fecha_nacimiento` VARCHAR(45) NOT NULL,
+  `nacionalidad` VARCHAR(20) NOT NULL,
+  PRIMARY KEY (`rut`),
+  UNIQUE INDEX `rut_UNIQUE` (`rut` ASC));
+  
+  #crear tabla habitacion
+  CREATE TABLE `openmind`.`habitaciones` (
+  `id_habitaciones` INT NOT NULL,
+  `nombre_habitacion` VARCHAR(45) NOT NULL,
+  `ocupacion` INT NOT NULL,	
+  `detalles` varchar(750) NOT NULL,
+  PRIMARY KEY (`id_habitaciones`));
+
+  #crear tabla costos
+  CREATE TABLE `openmind`.`costos` (
+  `rut` VARCHAR(10) NOT NULL,
+  `id_habitaciones` INT NOT NULL,
+  `id_modalidad` INT NOT NULL,
+  `fecha_ingreso` varchar(10));
+	
+  
+  #crear tabla catalogo
+  CREATE TABLE `openmind`.`catalogo` (
+  `producto` VARCHAR(45) NOT NULL,
+  `precio_producto` INT NOT NULL,
+  `cantidad_inventario` INT NOT NULL,
+  PRIMARY KEY (`producto`));
+  
+  #crear tabla compra_habitaciones
+  CREATE TABLE `openmind`.`compra_habitaciones` (
+  `id_habitaciones` INT NOT NULL,
+  `producto` VARCHAR(45) NOT NULL,
+  `fecha_ingreso` varchar(10) NOT NULL,
+  `cantidad_producto_a_comprar` INT NOT NULL,
+  PRIMARY KEY (`id_habitaciones`,`fecha_ingreso`,`producto`,`cantidad_producto_a_comprar`));
+  
+
+  # crear tabla modalidad
+  CREATE TABLE `openmind`.`modalidad` (
+  `id_modalidad` INT NOT NULL AUTO_INCREMENT,
+  `precio_modalidad` INT NOT NULL,
+  PRIMARY KEY (`id_modalidad`));
+  
+  # llaves foraneas
+  
+  ALTER TABLE `openmind`.`costos` 
+ADD INDEX `id_modalidad_idx` (`id_modalidad` ASC);
+ALTER TABLE `openmind`.`costos` 
+ADD CONSTRAINT `id_modalidad`
+  FOREIGN KEY (`id_modalidad`)
+  REFERENCES `openmind`.`modalidad` (`id_modalidad`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `id_habitaciones`
+  FOREIGN KEY (`id_habitaciones`)
+  REFERENCES `openmind`.`habitaciones` (`id_habitaciones`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;
+  ALTER TABLE `openmind`.`compra_habitaciones` 
+ADD INDEX `producto_idx` (`producto` ASC);
+ALTER TABLE `openmind`.`compra_habitaciones` 
+ADD CONSTRAINT `producto`
+  FOREIGN KEY (`producto`)
+  REFERENCES `openmind`.`catalogo` (`producto`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+
+  
+  
+  
+  
+  
+
+use openmind;
+
+  # catalogo
+   	INSERT INTO `catalogo` VALUES ('fanta',3000,10);
+	INSERT INTO `catalogo` VALUES ('cocacola',3000,15);
+	INSERT INTO `catalogo` VALUES ('sprite',3000,14);
+	insert into `catalogo` values ('7up',3000,15);
+
+  #insertar clientes`
+    insert into clientes values ('17671173-6', 'armando', 'armijo', 'rojas','m', '13/05/1994','chile');
+	insert into clientes values ('17671173-7', 'juana', 'vidal', 'mojito','f', '13/04/1990','chile');
+	insert into clientes values ('17671173-8', 'carla', 'ortega', 'azul','f', '13/04/1991','chile');
+	insert into clientes values ('17671173-9', 'pedro', 'pozo','melendes','m','24/08/1987','venezuela');
+	insert into clientes values ('17671173-1', 'javiera', 'contreras','contreras','f','24/08/1992','chile');
+	insert into clientes values ('18018258-6', 'roberto', 'castillo', 'briones','m','16/10/1991','chile');
+	insert into clientes values ('18368756-3', 'camila', 'beltrán', 'casanova','f','05/06/1996','chile');
+	insert into clientes values ('18308857-3', 'fernanda', 'luco', 'vallejos','f','15/12/1998','chile');
+	insert into clientes values ('18741896-4', 'pablo', 'roca', 'leal','m','27/11/1988','chile');
+	insert into clientes values ('17956955-k', 'talia', 'echegaray','lara','f','14/08/1995','argentina');
+	insert into clientes values ('18308344-0', 'felipe', 'lucero','espina','m','14/08/1989','peru');
+  
+  #habitaciones
+   	insert into habitaciones values (1,'lunar',0,'habitacion con tematica espacial');
+  	insert into habitaciones values (2,'suite',0,'habitacion de tematica presidencial');
+	insert into habitaciones values (3,'isla',0,'habitacion tematica hawai');
+	insert into habitaciones values (4,'sado',0,'habitacion con tematica sadomasoquista');
+	insert into habitaciones values (5,'parisina',0, 'habitacion con ambientación en la capital francesa');
+	insert into habitaciones values (6, 'lejano oriente',0, 'habitacion ambientada en el Japón medieval, con implementos de samurais y geishas');
+	insert into habitaciones values (7, 'las vegas',0, 'habitación tematica en juegos de azar, con maquínas de apuestas');
+	insert into habitaciones values (8, 'amazonas',0, 'habitación ambientada en la selva, con alfombras de pieles sinteticas, etc');
+	insert into habitaciones values (9, '50 sombras',0, 'habitación implementada con velas y vendas');
+	insert into habitaciones values (10, 'columpio',0, 'habitación implementada con un sex swing');
+	
+  #compra_habitaciones
+	INSERT INTO `compra_habitaciones` VALUES (1,'fanta','20/03/2018',2);
+	INSERT INTO `compra_habitaciones` VALUES (2,'cocacola','19/03/2018',1);
+	INSERT INTO `compra_habitaciones` VALUES (3,'sprite','18/03/2018',2);
+	insert into `compra_habitaciones` values (4,'sprite','22/03/2018',1);
+	INSERT INTO `compra_habitaciones` VALUES (1,'fanta','21/03/2018',1);
+	INSERT INTO `compra_habitaciones` VALUES (1,'fanta','25/03/2018',1);
+	INSERT INTO `compra_habitaciones` VALUES (1,'fanta','23/03/2018',1);
+
+	INSERT INTO `compra_habitaciones` VALUES (3,'sprite','10/03/2018',4);
+	INSERT INTO `compra_habitaciones` VALUES (2,'cocacola','15/03/2018',1);
+	INSERT INTO `compra_habitaciones` VALUES (10,'cocacola','17/04/2018',1);
+	
+	INSERT INTO `compra_habitaciones` VALUES (9,'cocacola','19/04/2018',1);
+	
+	
+	
+   #modalidad
+	insert into `modalidad` values (1,5000);
+	insert into `modalidad` values (2,15000);
+	
+
+  
+  
+  #costos
+   	insert into costos values ('17671173-6',1,1,'20/03/2018');
+	insert into costos values ('17671173-7',2,2,'19/03/2018');
+	insert into costos values ('17671173-8',3,1,'18/03/2018');
+	insert into costos values ('17671173-6',4,1,'22/03/2018');
+	insert into costos values ('17671173-9',1,2,'21/03/2018');
+	insert into costos values ('17671173-6',1,2,'25/03/2018');
+	insert into costos values ('17671173-6',1,2,'23/03/2018');
+	insert into costos values ('17671173-1',1,2,'25/03/2018');
+	insert into costos values ('17671173-8',3,1,'10/03/2018');
+	insert into costos values ('17671173-7',2,2,'15/03/2018');
+	insert into costos values ('18018258-6',10,2,'17/04/2018');
+	insert into costos values ('18368756-3',10,2,'17/04/2018');
+	insert into costos values ('18308857-3',9,2,'19/04/2018');
+	insert into costos values ('18741896-4',9,2,'19/04/2018');
+	insert into costos values ('17956955-k',1,2,'20/03/2018');
+	insert into costos values ('18308344-0',1,2,'20/03/2018');
+	insert into costos values ('18308857-3',1,2,'20/03/2018');
+	insert into costos values ('18741896-4',1,2,'20/03/2018');
+  
+  # busquedas
+  
+  #consulta sql informe 1 det
+  
+		select cl.nombre ,cl.apellido_paterno,cl.apellido_materno,cto.fecha_ingreso, h.nombre_habitacion
+ from costos cto , clientes cl,habitaciones h,modalidad mo,compra_habitaciones ch,catalogo ca
+ where cl.rut= cto.rut and h.id_habitaciones=cto.id_habitaciones and 
+ ch.id_habitaciones=h.id_habitaciones and mo.id_modalidad=cto.id_modalidad and cto.fecha_ingreso=ch.fecha_ingreso and ch.producto=ca.producto 
+ order by cl.nombre;
+  
+  #consulta sql informe 2
+  
+		select cl.*,cto.id_modalidad,cto.fecha_ingreso,mo.precio_modalidad,h.nombre_habitacion
+ from costos cto , clientes cl,habitaciones h,modalidad mo,
+compra_habitaciones ch,catalogo ca
+ where cl.rut = '17671173-6' and cl.rut= cto.rut and h.id_habitaciones=cto.id_habitaciones and 
+ ch.id_habitaciones=h.id_habitaciones and mo.id_modalidad=cto.id_modalidad and ch.producto=ca.producto 
+ and cto.fecha_ingreso=ch.fecha_ingreso;
+  
+  #consulta sql informe 3
+  
+  ###el cliente del amor se encuentra con dos consultas de sql la primera nos devuelve el rut del que tiene la mayor cantidad de fechas de ingreso
+  ###y con el rut se hace la segunda consulta de sus datos.
+  
+  # primera consulta
+		select cto.rut from costos cto, clientes cl where  cl.rut= cto.rut
+group by cto.rut having count(cto.rut) order by count(cto.rut) desc limit 1
+
+  # segunda consulta
+		select cl.*,cto.fecha_ingreso,h.nombre_habitacion,cto.id_modalidad
+ from costos cto , clientes cl,habitaciones h,modalidad mo,
+compra_habitaciones ch,catalogo ca
+ where cl.rut = '17671173-6' and cl.rut= cto.rut and h.id_habitaciones=cto.id_habitaciones and 
+ ch.id_habitaciones=h.id_habitaciones and mo.id_modalidad=cto.id_modalidad and ch.producto=ca.producto 
+ and cto.fecha_ingreso=ch.fecha_ingreso;
+ 
+ consulta sql informe 4
+ 
+ #se encuentra bajo 3 consultas sql
+ 
+ # primera consulta da el nombre de la habitacion
+		select h.nombre_habitacion, count(cto.id_habitaciones) from costos cto, habitaciones h where cto.id_habitaciones = h.id_habitaciones
+group by cto.id_habitaciones limit 1
+
+ # segunda consulta da los detalles y elimina automaticamente a los que entraron a la misma habitacion y compraron dejando un solo total de compra 
+  
+		select h.nombre_habitacion, cl.nombre, cl. apellido_paterno, cl.apellido_materno,cto.fecha_ingreso, 
+(ch.cantidad_producto_a_comprar*ca.precio_producto+mo.precio_modalidad )as total
+from habitaciones h,clientes cl,
+costos cto,modalidad mo, compra_habitaciones ch,catalogo ca
+ where h.nombre_habitacion= 'lunar' and cl.rut= cto.rut and h.id_habitaciones=cto.id_habitaciones and 
+ ch.id_habitaciones=h.id_habitaciones and mo.id_modalidad=cto.id_modalidad and ch.producto=ca.producto 
+ and cto.fecha_ingreso=ch.fecha_ingreso 
+group by  fecha_ingreso
+
+ # tercera consulta total final
+ 
+ 
+select sum(total)as total_final from(
+select h.nombre_habitacion, cl.nombre, cl. apellido_paterno, cl.apellido_materno,cto.fecha_ingreso, 
+(ch.cantidad_producto_a_comprar*ca.precio_producto+mo.precio_modalidad )as total
+from habitaciones h,clientes cl,
+costos cto,modalidad mo, compra_habitaciones ch,catalogo ca
+ where h.nombre_habitacion= 'lunar' and cl.rut= cto.rut and h.id_habitaciones=cto.id_habitaciones and 
+ ch.id_habitaciones=h.id_habitaciones and mo.id_modalidad=cto.id_modalidad and ch.producto=ca.producto 
+ and cto.fecha_ingreso=ch.fecha_ingreso 
+group by  fecha_ingreso)t2;
+ 
+  consulta sql informe 5
+  #en dos consultas una para determinar cual es la menor y la otra para los detalles
+  
+		select h.nombre_habitacion, count(cto.id_habitaciones) from costos cto, habitaciones h where cto.id_habitaciones = h.id_habitaciones
+group by cto.id_habitaciones order by count(cto.id_habitaciones) limit 1
+
+# segunda consulta es la misma que la del informe pasado pero la devolucion del nombre de la peor suite
+
+		select h.nombre_habitacion, cl.nombre, cl. apellido_paterno, cl.apellido_materno,cto.fecha_ingreso, 
+(ch.cantidad_producto_a_comprar*ca.precio_producto+mo.precio_modalidad )as total
+from habitaciones h,clientes cl,
+costos cto,modalidad mo, compra_habitaciones ch,catalogo ca
+ where h.nombre_habitacion= 'sado' and cl.rut= cto.rut and h.id_habitaciones=cto.id_habitaciones and 
+ ch.id_habitaciones=h.id_habitaciones and mo.id_modalidad=cto.id_modalidad and ch.producto=ca.producto 
+ and cto.fecha_ingreso=ch.fecha_ingreso 
+group by  fecha_ingreso
+
+## tercera consulta total final
+ 
+ 
+select sum(total)as total_final from(
+select h.nombre_habitacion, cl.nombre, cl. apellido_paterno, cl.apellido_materno,cto.fecha_ingreso, 
+(ch.cantidad_producto_a_comprar*ca.precio_producto+mo.precio_modalidad )as total
+from habitaciones h,clientes cl,
+costos cto,modalidad mo, compra_habitaciones ch,catalogo ca
+ where h.nombre_habitacion= 'sado' and cl.rut= cto.rut and h.id_habitaciones=cto.id_habitaciones and 
+ ch.id_habitaciones=h.id_habitaciones and mo.id_modalidad=cto.id_modalidad and ch.producto=ca.producto 
+ and cto.fecha_ingreso=ch.fecha_ingreso 
+group by  fecha_ingreso)t2;
+  
+  
+  consulta sql informe 6
+  
+  # consulta por producto mas vendido devuelve nombre de producto
+  
+		select ca.producto
+from catalogo ca, compra_habitaciones ch
+where ca.producto= ch.producto group by ca.producto order by ch.cantidad_producto_a_comprar desc limit 1
+  
+  #consulta que me devuelve la habitacion donde mas se vendio el producto
+  
+		select producto,h.nombre_habitacion, sum(ch.cantidad_producto_a_comprar) as total
+from  compra_habitaciones ch, habitaciones h
+where producto ='sprite' and ch.id_habitaciones= h.id_habitaciones	group by ch.id_habitaciones limit 1
+
+	#consulta que me devuelve la habitacion donde menos se vendio el producto
+	
+		select producto,h.nombre_habitacion, sum(ch.cantidad_producto_a_comprar) as total
+from  compra_habitaciones ch, habitaciones h
+where producto ='sprite' and ch.id_habitaciones= h.id_habitaciones	group by ch.id_habitaciones
+order by ch.cantidad_producto_a_comprar  limit 1
+
+consulta sql informe 7
+  
+  # consulta por producto menos vendido devuelve nombre de producto
+  
+		 select ca.producto
+from catalogo ca, compra_habitaciones ch
+where ca.producto= ch.producto group by ca.producto order by ch.cantidad_producto_a_comprar limit 1
+  
+  #consulta que me devuelve la habitacion donde mas se vendio el producto menos vendido
+  
+	select producto,h.nombre_habitacion, sum(ch.cantidad_producto_a_comprar) as total
+from  compra_habitaciones ch, habitaciones h
+where producto ='cocacola' and ch.id_habitaciones= h.id_habitaciones	group by ch.id_habitaciones limit 1
+  
+  #consulta que me devuelve la habitacion donde menos se vendio el producto menos vendido
+  
+	select producto,h.nombre_habitacion, sum(ch.cantidad_producto_a_comprar) as total
+from  compra_habitaciones ch, habitaciones h
+where producto ='cocacola' and ch.id_habitaciones= h.id_habitaciones	group by ch.id_habitaciones
+order by ch.cantidad_producto_a_comprar asc limit 1
+  
+  consulta sql informe 8
+  
+devuelve un nombre y promedio en particular
+
+select nombre_habitacion, avg(cant) as promodio from(
+select cto.id_habitaciones,h.nombre_habitacion,cto.fecha_ingreso,count(cto.id_habitaciones ) as cant
+from costos cto,clientes cl,habitaciones h
+where cto.id_habitaciones=300 and cto.rut= cl.rut and cto.id_habitaciones=h.id_habitaciones 
+group by fecha_ingreso order by nombre_habitacion desc)t1;
+
+
+
+
+
+
+
+ private ClienteVO MatchClienteDelAmor(String rut){
+         boolean resultado = false;
+         ClienteVO clienteAmor=new ClienteVO();
+          if(conectar()){
+              try{
+                  Statement st= con.createStatement();
+                  String sql= "select cto.rut from costos cto, clientes cl where  cl.rut= cto.rut\n" +
+"group by cto.rut having count(cto.rut) order by count(cto.rut) desc limit 1";
+                  System.out.println("consultando:["+sql+"]");
+                  ResultSet result= st.executeQuery(sql);
+                  if(result.next()){
+                      clienteAmor.setRut(result.getString("rut"));
+                      desconectar();
+                      return clienteAmor;
+                  }
+              }catch (SQLException ex){
+                  System.out.println("Error al consultar:["+ex.getMessage()+"]");
+              }
+              desconectar();
+          }
+          return clienteAmor;
+      }
+
+**************************************************************************************************************************
+
+ public ArrayList obtenerInforme4(){
+        ArrayList<Object> listaDeNombres4 = new ArrayList<Object>();
+        int n=0;
+        String nombre= null;
+        Informe4y5VO informe4 = null;
+        
+        if(this.conectar() == true){
+            try {
+                Statement st = con.createStatement();
+                String sql="select h.nombre_habitacion, count(cto.id_habitaciones) from costos cto, habitaciones h where cto.id_habitaciones = h.id_habitaciones\n" +
+"group by cto.id_habitaciones limit 1";
+                ResultSet result = st.executeQuery(sql);
+                if(result.next()){
+                   nombre=result.getString("nombre_habitacion");
+                    //System.out.println(nombre);
+                
+                String sSql = "select h.nombre_habitacion, cl.nombre, cl. apellido_paterno, cl.apellido_materno,cto.fecha_ingreso, \n" +
+"(ch.cantidad_producto_a_comprar*ca.precio_producto+mo.precio_modalidad )as total\n" +
+"from habitaciones h,clientes cl,\n" +
+"costos cto,modalidad mo, compra_habitaciones ch,catalogo ca\n" +
+" where h.nombre_habitacion=" +"'"+nombre+"'"+" and cl.rut= cto.rut and h.id_habitaciones=cto.id_habitaciones and \n" +
+" ch.id_habitaciones=h.id_habitaciones and mo.id_modalidad=cto.id_modalidad and ch.producto=ca.producto \n" +
+" and cto.fecha_ingreso=ch.fecha_ingreso \n" +
+"group by  fecha_ingreso";
+                //System.out.println("Consultando:[" + sSql + "]");
+               ResultSet resultt=st.executeQuery(sSql);
+                while(resultt.next() == true){
+                    informe4 = new Informe4y5VO();
+                    informe4.setNombre_habitacion(resultt.getString("nombre_habitacion"));
+                    informe4.setNombre(resultt.getString("nombre"));
+                    informe4.setApellido_paterno(resultt.getString("apellido_paterno"));
+                    informe4.setApellido_materno(resultt.getString("apellido_materno"));
+                    informe4.setFecha_ingreso(resultt.getString("fecha_ingreso"));
+                    informe4.setTotal(resultt.getInt("total"));
+                    
+                    listaDeNombres4.add(n,informe4);
+                    //System.out.println(listaDeNombres.get(n));
+                    n=n+1;
+                    System.out.println(informe4.toString());
+                }
+                }
+                
+                this.desconectar();
+            } catch (SQLException ex) {
+                System.out.println("Error en la consulta:[" + ex.getMessage() + "]");
+            }
+        }
+        return listaDeNombres4;
+     
+    }
+     public ArrayList obtenerInforme5(){
+        ArrayList<Object> listaDeNombres5 = new ArrayList<Object>();
+        int n=0;
+        String nombre= null;
+        Informe4y5VO informe4 = null;
+        
+        if(this.conectar() == true){
+            try {
+                Statement st = con.createStatement();
+                String sql="select h.nombre_habitacion, count(cto.id_habitaciones) from costos cto, habitaciones h where cto.id_habitaciones = h.id_habitaciones\n" +
+"group by cto.id_habitaciones order by count(cto.id_habitaciones) limit 1";
+                ResultSet result = st.executeQuery(sql);
+                if(result.next()){
+                   nombre=result.getString("nombre_habitacion");
+                    System.out.println(nombre);
+                
+                String sSql = "select h.nombre_habitacion, cl.nombre, cl. apellido_paterno, cl.apellido_materno,cto.fecha_ingreso, \n" +
+"(ch.cantidad_producto_a_comprar*ca.precio_producto+mo.precio_modalidad )as total\n" +
+"from habitaciones h,clientes cl,\n" +
+"costos cto,modalidad mo, compra_habitaciones ch,catalogo ca\n" +
+" where h.nombre_habitacion=" +"'"+nombre+"'"+" and cl.rut= cto.rut and h.id_habitaciones=cto.id_habitaciones and \n" +
+" ch.id_habitaciones=h.id_habitaciones and mo.id_modalidad=cto.id_modalidad and ch.producto=ca.producto \n" +
+" and cto.fecha_ingreso=ch.fecha_ingreso \n" +
+"group by  fecha_ingreso";
+                //System.out.println("Consultando:[" + sSql + "]");
+               ResultSet resultt=st.executeQuery(sSql);
+                while(resultt.next() == true){
+                    informe4 = new Informe4y5VO();
+                    informe4.setNombre_habitacion(resultt.getString("nombre_habitacion"));
+                    informe4.setNombre(resultt.getString("nombre"));
+                    informe4.setApellido_paterno(resultt.getString("apellido_paterno"));
+                    informe4.setApellido_materno(resultt.getString("apellido_materno"));
+                    informe4.setFecha_ingreso(resultt.getString("fecha_ingreso"));
+                    informe4.setTotal(resultt.getInt("total"));
+                    
+                    listaDeNombres5.add(n,informe4);
+                    //System.out.println(listaDeNombres.get(n));
+                    n=n+1;
+                    System.out.println(informe4.toString());
+                }
+                }
+                
+                this.desconectar();
+            } catch (SQLException ex) {
+                System.out.println("Error en la consulta:[" + ex.getMessage() + "]");
+            }
+        }
+        return listaDeNombres5;
+     
+    }
+    
+     public ArrayList obtenerInforme6(){
+        ArrayList<Object> listaDeNombres6 = new ArrayList<Object>();
+        int n=0;
+        String nombre= null;
+        Informe6VO informe6 = null;
+        
+        if(this.conectar() == true){
+            try {
+                Statement st = con.createStatement();
+                String sql="select ca.producto\n" +
+"from catalogo ca, compra_habitaciones ch\n" +
+"where ca.producto= ch.producto group by ca.producto order by ch.cantidad_producto_a_comprar desc limit 1";
+                ResultSet result = st.executeQuery(sql);
+                if(result.next()){
+                   nombre=result.getString("producto");
+                    System.out.println(nombre);
+                
+                String sSql = "select producto,h.nombre_habitacion, sum(ch.cantidad_producto_a_comprar) as total\n" +
+"from  compra_habitaciones ch, habitaciones h\n" +
+"where producto ='"+nombre+"' and ch.id_habitaciones= h.id_habitaciones	group by ch.id_habitaciones limit 1";
+                //System.out.println("Consultando:[" + sSql + "]");
+               ResultSet resultt=st.executeQuery(sSql);
+                while(resultt.next() == true){
+                    informe6 = new Informe6VO();
+                        informe6.setProducto(resultt.getString("producto"));
+                        informe6.setNombre_habitacion(resultt.getString("nombre_habitacion"));
+                        informe6.setTotal(resultt.getInt("total"));
+                    
+                    listaDeNombres6.add(n,informe6);
+                    //System.out.println(listaDeNombres.get(n));
+                    n=n+1;
+                    System.out.println(informe6.toString());
+                }
+                 String ssSql="select producto,h.nombre_habitacion, sum(ch.cantidad_producto_a_comprar) as total\n" +
+"from  compra_habitaciones ch, habitaciones h\n" +
+"where producto ='"+nombre+"' and ch.id_habitaciones= h.id_habitaciones	group by ch.id_habitaciones\n" +
+"order by ch.cantidad_producto_a_comprar asc limit 1"; 
+                ResultSet resulttt=st.executeQuery(ssSql);
+                
+                while(resulttt.next()){
+                        informe6.setProducto(resulttt.getString("producto"));
+                        informe6.setNombre_habitacion(resulttt.getString("nombre_habitacion"));
+                        informe6.setTotal(resulttt.getInt("total"));
+                        
+                    listaDeNombres6.add(n,informe6);
+                    
+                    System.out.println(informe6.toString());
+                }
+                }
+                this.desconectar();
+            } catch (SQLException ex) {
+                System.out.println("Error en la consulta:[" + ex.getMessage() + "]");
+            }
+        }
+        return listaDeNombres6;
+     
+    }
+     
+          public ArrayList obtenerInforme7(){
+        ArrayList<Object> listaDeNombres7 = new ArrayList<Object>();
+        int n=0;
+        String nombre= null;
+        Informe6VO informe61 = null;
+        
+        if(this.conectar() == true){
+            try {
+                Statement st = con.createStatement();
+                String sql="select ca.producto\n" +
+"from catalogo ca, compra_habitaciones ch\n" +
+"where ca.producto= ch.producto group by ca.producto order by ch.cantidad_producto_a_comprar limit 1";
+                ResultSet result = st.executeQuery(sql);
+                if(result.next()){
+                   nombre=result.getString("producto");
+                    System.out.println(nombre);
+                
+                String sSql = "select producto,h.nombre_habitacion, sum(ch.cantidad_producto_a_comprar) as total\n" +
+"from  compra_habitaciones ch, habitaciones h\n" +
+"where producto ='"+nombre+"' and ch.id_habitaciones= h.id_habitaciones	group by ch.id_habitaciones limit 1";
+                //System.out.println("Consultando:[" + sSql + "]");
+               ResultSet resultt=st.executeQuery(sSql);
+                while(resultt.next() == true){
+                    informe61 = new Informe6VO();
+                        informe61.setProducto(resultt.getString("producto"));
+                        informe61.setNombre_habitacion(resultt.getString("nombre_habitacion"));
+                        informe61.setTotal(resultt.getInt("total"));
+                    
+                    listaDeNombres7.add(n,informe61);
+                    //System.out.println(listaDeNombres.get(n));
+                    n=n+1;
+                    System.out.println(informe61.toString());
+                }
+                String ssSql="select producto,h.nombre_habitacion, sum(ch.cantidad_producto_a_comprar) as total\n" +
+"from  compra_habitaciones ch, habitaciones h\n" +
+"where producto ='"+nombre+"' and ch.id_habitaciones= h.id_habitaciones	group by ch.id_habitaciones\n" +
+"order by ch.cantidad_producto_a_comprar asc limit 1"; 
+                ResultSet resulttt=st.executeQuery(ssSql);
+                
+                while(resulttt.next()){
+                        informe61.setProducto(resulttt.getString("producto"));
+                        informe61.setNombre_habitacion(resulttt.getString("nombre_habitacion"));
+                        informe61.setTotal(resulttt.getInt("total"));
+                        
+                    listaDeNombres7.add(n,informe61);
+                    
+                    System.out.println(informe61.toString());
+                }
+                }
+                
+                this.desconectar();
+            } catch (SQLException ex) {
+                System.out.println("Error en la consulta:[" + ex.getMessage() + "]");
+            }
+        }
+        return listaDeNombres7;
+     
+    }
+    
+     public boolean conectar(){
+        try {        
+            con = DriverManager.getConnection(url, user, pass);
+            System.out.println("Estimado, usted ha conectado con la base");
+            return true;
+        } catch (SQLException ex) {
+            System.out.println("Error al conectar:[" + ex.getMessage() + "]");
+        }
+        return false;
+    }
+    
+    private void desconectar(){
+        if(con != null){
+            try {
+                if(!con.isClosed()){
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Error al desconectar:[" + ex.getMessage() + "]");
+            }
+        }     
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class Informe8y9VO  implements Comparable <Informe8y9VO> {
+ 
+    private String nombre_habitacion;
+    private double promedio;
+
+    public Informe8y9VO(String nombre_habitacion, double promedio) {
+        this.nombre_habitacion = nombre_habitacion;
+        this.promedio = promedio;
+    }
+    
+    public Informe8y9VO(){
+        
+        this.nombre_habitacion="";
+        this.promedio=1.5;
+    }
+
+    public String getNombre_habitacion() {
+        return nombre_habitacion;
+    }
+
+    public void setNombre_habitacion(String nombre_habitacion) {
+        this.nombre_habitacion = nombre_habitacion;
+    }
+
+    public double getPromedio() {
+        return promedio;
+    }
+
+    public void setPromedio(double promedio) {
+        this.promedio = promedio;
+    }
+
+    @Override
+    public String toString() {
+        return "Informe8y9VO{" + "nombre_habitacion=" + nombre_habitacion + ", promedio=" + promedio + '}';
+    }
+
+    
+    
+    public int compareTo(Informe8y9VO o) {
+        String a=new String(String.valueOf(this.promedio)+this.nombre_habitacion);
+        String b=new String(String.valueOf(o.promedio)+o.nombre_habitacion);
+        return a.compareTo(b);
+    }
+     
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public ArrayList obtenerInforme8(){
+        ArrayList<Object> listaDeNombres8 = new ArrayList<Object>();
+        int n=0;
+        int i=0;
+       
+        Informe8y9VO informe8 = null;
+        
+        
+        for(i=1;i<11;i++){
+        if(this.conectar() == true){
+            try {
+                Statement st = con.createStatement();
+                String sql="select nombre_habitacion, avg(cant) as promedio from(\n" +
+"select cto.id_habitaciones,h.nombre_habitacion,cto.fecha_ingreso,count(cto.id_habitaciones ) as cant\n" +
+"from costos cto,clientes cl,habitaciones h\n" +
+"where cto.id_habitaciones="+i+" and cto.rut= cl.rut and cto.id_habitaciones=h.id_habitaciones \n" +
+"group by fecha_ingreso order by nombre_habitacion desc)t1;";
+                ResultSet result = st.executeQuery(sql);
+             
+
+                while(result.next() == true){
+                    informe8 = new Informe8y9VO();
+                    informe8.setNombre_habitacion(result.getString("nombre_habitacion"));
+                    informe8.setPromedio(result.getDouble("promedio"));
+                  
+              
+                    
+                    listaDeNombres8.add(n,informe8);
+                    //System.out.println(listaDeNombres.get(n));
+                    n=n+1;
+                    System.out.println(informe8.toString());
+                }
+                
+                
+                this.desconectar();
+            } catch (SQLException ex) {
+                System.out.println("Error en la consulta:[" + ex.getMessage() + "]");
+            }
+        }
+        }
+        return listaDeNombres8;
+    }
